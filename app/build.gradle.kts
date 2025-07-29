@@ -58,11 +58,20 @@ dependencies {
 
     // Room DB
     implementation (libs.androidx.room.runtime)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.protolite.well.known.types)
+    implementation(libs.androidx.recyclerview)
     kapt (libs.androidx.room.compiler)
 
+    implementation(libs.barcode.scanning)
     // Partage + QR code
     implementation (libs.core)
 
+
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view.v130)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
