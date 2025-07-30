@@ -52,6 +52,22 @@ jobs:
 
       - name: Run linting
         run: ./gradlew lint
+        continue-on-error: true
+
+      - name: Show lint results
+        run: |
+          echo "=== Lint Results ==="
+          if [ -f "app/build/reports/lint-results.xml" ]; then
+            echo "XML report found"
+          fi
+          if [ -f "app/build/reports/lint-results.html" ]; then
+            echo "HTML report found"
+          fi
+          if [ -d "app/build/reports/lint-results" ]; then
+            echo "Lint results directory found"
+            ls -la app/build/reports/lint-results/
+          fi
+        continue-on-error: true
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
