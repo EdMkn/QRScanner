@@ -66,7 +66,10 @@ jobs:
         if: always()
         with:
           name: lint-results
-          path: app/build/reports/lint-results.xml
+          path: |
+            app/build/reports/lint-results.xml
+            app/build/reports/lint-results.html
+            app/build/reports/lint-results/
           retention-days: 7
 
   build:
@@ -137,11 +140,15 @@ jobs:
 
       - name: Run dependency check
         run: ./gradlew dependencyCheckAnalyze
+        continue-on-error: true
 
       - name: Upload security report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: security-report
-          path: app/build/reports/dependency-check-report.html
+          path: |
+            app/build/reports/dependency-check-report.html
+            app/build/reports/dependency-check-report.xml
+            app/build/reports/
           retention-days: 7
