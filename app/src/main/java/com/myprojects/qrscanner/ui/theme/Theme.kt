@@ -11,12 +11,26 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * Dark theme color scheme for the QR Scanner application.
+ * 
+ * This color scheme defines the colors used when the app is in dark mode.
+ * It uses purple and pink tones that provide good contrast and readability
+ * in low-light environments.
+ */
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
+/**
+ * Light theme color scheme for the QR Scanner application.
+ * 
+ * This color scheme defines the colors used when the app is in light mode.
+ * It uses purple and pink tones that provide good contrast and readability
+ * in well-lit environments.
+ */
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
@@ -33,6 +47,25 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+/**
+ * Main theme composable for the QR Scanner application.
+ * 
+ * This composable function sets up the Material 3 theme for the entire application.
+ * It handles both light and dark themes, as well as dynamic color support for
+ * Android 12+ devices.
+ * 
+ * The theme automatically adapts to:
+ * - System dark/light theme preference
+ * - Dynamic color support on Android 12+ (Material You)
+ * - Fallback to static color schemes for older devices
+ * 
+ * @param darkTheme Whether to use dark theme. Defaults to system preference.
+ * @param dynamicColor Whether to use dynamic colors (Android 12+). Defaults to true.
+ * @param content The composable content to be themed.
+ * 
+ * @author Edouard Makon
+ * @since 1.0
+ */
 @Composable
 fun QRScannerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
