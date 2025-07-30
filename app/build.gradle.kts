@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.protolite.well.known.types)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.constraintlayout)
     kapt (libs.androidx.room.compiler)
 
     implementation(libs.barcode.scanning)
@@ -73,6 +74,7 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view.v130)
+    implementation(libs.androidx.activity)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
