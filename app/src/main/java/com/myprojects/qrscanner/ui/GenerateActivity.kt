@@ -8,9 +8,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.myprojects.qrscanner.R
+import androidx.core.graphics.set
+import androidx.core.graphics.createBitmap
 
 /**
  * Activity for generating QR codes from text input.
@@ -56,7 +59,8 @@ class GenerateActivity : ComponentActivity() {
      * Called when the activity is first created.
      * 
      * This method initializes the activity, sets up the UI components,
-     * and configures the click listener for the generate button.
+     * configures the click listener for the generate button, and sets up
+     * the back button handling using OnBackPressedDispatcher.
      * 
      * @param savedInstanceState If the activity is being re-initialized after
      *                          previously being shut down, this Bundle contains
@@ -68,6 +72,7 @@ class GenerateActivity : ComponentActivity() {
 
         initializeViews()
         setupClickListeners()
+        setupBackPressHandling()
     }
 
     /**
@@ -101,14 +106,18 @@ class GenerateActivity : ComponentActivity() {
     }
 
     /**
-     * Handles the back button press to return to the previous screen.
+     * Sets up the back button handling using OnBackPressedDispatcher.
      * 
-     * This method is called when the user presses the back button.
+     * This method configures the modern back button handling approach
+     * using OnBackPressedCallback instead of the deprecated onBackPressed().
      * It ensures proper cleanup and navigation back to the main activity.
      */
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+    private fun setupBackPressHandling() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        })
     }
 
     /**
@@ -133,11 +142,11 @@ class GenerateActivity : ComponentActivity() {
         val size = 512
         val qrCodeWriter = QRCodeWriter()
         val bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, size, size)
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
+        val bitmap = createBitmap(size, size, Bitmap.Config.RGB_565)
 
         for (x in 0 until size) {
             for (y in 0 until size) {
-                bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+                bitmap[x, y] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
             }
         }
         return bitmap

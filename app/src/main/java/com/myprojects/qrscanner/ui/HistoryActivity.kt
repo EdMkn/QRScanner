@@ -2,6 +2,7 @@ package com.myprojects.qrscanner.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,8 +57,8 @@ class HistoryActivity : ComponentActivity() {
      * Called when the activity is first created.
      * 
      * This method initializes the activity, sets up the RecyclerView with its
-     * adapter, configures the ViewModel, and observes data changes to update
-     * the UI automatically.
+     * adapter, configures the ViewModel, observes data changes to update
+     * the UI automatically, and sets up the back button handling.
      * 
      * @param savedInstanceState If the activity is being re-initialized after
      *                          previously being shut down, this Bundle contains
@@ -71,6 +72,7 @@ class HistoryActivity : ComponentActivity() {
         setupRecyclerView()
         setupViewModel()
         observeData()
+        setupBackPressHandling()
     }
 
     /**
@@ -119,13 +121,17 @@ class HistoryActivity : ComponentActivity() {
     }
 
     /**
-     * Handles the back button press to return to the previous screen.
+     * Sets up the back button handling using OnBackPressedDispatcher.
      * 
-     * This method is called when the user presses the back button.
+     * This method configures the modern back button handling approach
+     * using OnBackPressedCallback instead of the deprecated onBackPressed().
      * It ensures proper cleanup and navigation back to the main activity.
      */
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+    private fun setupBackPressHandling() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        })
     }
 }
