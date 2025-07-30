@@ -24,6 +24,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.myprojects.qrscanner.R
 import com.myprojects.qrscanner.data.model.Scan
 import com.myprojects.qrscanner.ui.viewmodel.ScanViewModel
+import com.myprojects.qrscanner.utils.ThemeManager
 
 /**
  * Main activity of the QR Scanner application.
@@ -70,6 +71,12 @@ class MainActivity : ComponentActivity() {
      * Used for detecting and processing QR codes from camera frames.
      */
     private val scanner = BarcodeScanning.getClient()
+    
+    /**
+     * Settings button for accessing app settings.
+     * Provides quick access to theme and other app settings.
+     */
+    private lateinit var settingsButton: com.google.android.material.floatingactionbutton.FloatingActionButton
 
     /**
      * Called when the activity is first created.
@@ -89,12 +96,66 @@ class MainActivity : ComponentActivity() {
 
         previewView = findViewById(R.id.previewView)
         bottomNavigation = findViewById(R.id.bottomNavigation)
+        settingsButton = findViewById(R.id.settingsButton)
+
+        // Log current theme for debugging
+        val currentTheme = ThemeManager.getThemeMode(this)
+        Log.d("MainActivity", "Current theme mode: $currentTheme")
+        Log.d("MainActivity", "Is dark mode: ${ThemeManager.isDarkMode(this)}")
+
+        // Update UI colors based on current theme
+        updateUIColors()
 
         // Set up bottom navigation
         setupBottomNavigation()
+        
+        // Set up settings button
+        setupSettingsButton()
 
         // Start with scanner view
         bottomNavigation.selectedItemId = R.id.navigation_scanner
+    }
+
+    /**
+     * Called when the activity resumes.
+     * 
+     * This method is called when the activity becomes visible again,
+     * such as when returning from another activity.
+     */
+    override fun onResume() {
+        super.onResume()
+        // Update UI colors in case theme was changed in settings
+        updateUIColors()
+    }
+
+    /**
+     * Updates the UI colors based on the current theme.
+     * 
+     * This method sets the appropriate colors for the bottom navigation
+     * and settings button based on whether the app is in light or dark mode.
+     */
+    private fun updateUIColors() {
+        val isDarkMode = ThemeManager.isDarkMode(this)
+        
+        if (isDarkMode) {
+            // Dark theme colors
+            settingsButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.primary_dark)
+            settingsButton.imageTintList = ContextCompat.getColorStateList(this, R.color.on_primary_dark)
+            bottomNavigation.setBackgroundColor(ContextCompat.getColor(this, R.color.surface_dark))
+            
+            // Update bottom navigation item colors
+            bottomNavigation.itemIconTintList = ContextCompat.getColorStateList(this, R.color.on_surface_variant_dark)
+            bottomNavigation.itemTextColor = ContextCompat.getColorStateList(this, R.color.on_surface_dark)
+        } else {
+            // Light theme colors
+            settingsButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.primary_light)
+            settingsButton.imageTintList = ContextCompat.getColorStateList(this, R.color.on_primary_light)
+            bottomNavigation.setBackgroundColor(ContextCompat.getColor(this, R.color.surface_light))
+            
+            // Update bottom navigation item colors
+            bottomNavigation.itemIconTintList = ContextCompat.getColorStateList(this, R.color.on_surface_variant_light)
+            bottomNavigation.itemTextColor = ContextCompat.getColorStateList(this, R.color.on_surface_light)
+        }
     }
 
     /**
@@ -132,6 +193,19 @@ class MainActivity : ComponentActivity() {
                 }
                 else -> false
             }
+        }
+    }
+
+    /**
+     * Sets up the settings button with click listener.
+     * 
+     * This method configures the settings button to launch the settings activity
+     * when pressed, allowing users to customize app appearance and behavior.
+     */
+    private fun setupSettingsButton() {
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 

@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.QRScanner" parent="Theme.AppCompat.Light.DarkActionBar" />
+    <!-- Light Theme for QR Scanner -->
+    <style name="Theme.QRScanner" parent="Theme.Material3.Light">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorPrimaryVariant">@color/primary_variant_light</item>
+        <item name="colorOnPrimary">@color/on_primary_light</item>
+        
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/secondary_light</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant_light</item>
+        <item name="colorOnSecondary">@color/on_secondary_light</item>
+        
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/surface_light</item>
+        <item name="colorOnSurface">@color/on_surface_light</item>
+        <item name="colorSurfaceVariant">@color/surface_variant_light</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant_light</item>
+        
+        <!-- Background colors -->
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="colorOnBackground">@color/on_background_light</item>
+        
+        <!-- Error colors -->
+        <item name="colorError">@color/error_light</item>
+        <item name="colorOnError">@color/on_error_light</item>
+        
+        <!-- Status bar and navigation -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        
+        <!-- Text appearance -->
+        <item name="android:textColorPrimary">@color/on_background_light</item>
+        <item name="android:textColorSecondary">@color/on_surface_variant_light</item>
+        
+        <!-- Component styles -->
+        <item name="materialButtonStyle">@style/Widget.QRScanner.Button</item>
+        <item name="textInputStyle">@style/Widget.QRScanner.TextInputLayout</item>
+    </style>
+    
+    <!-- Button style -->
+    <style name="Widget.QRScanner.Button" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/on_primary_light</item>
+        <item name="backgroundTint">@color/primary_light</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+    
+    <!-- Text input style -->
+    <style name="Widget.QRScanner.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary_light</item>
+        <item name="hintTextColor">@color/primary_light</item>
+    </style>
 </resources>

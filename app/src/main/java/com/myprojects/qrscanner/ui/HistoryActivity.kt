@@ -3,14 +3,14 @@ package com.myprojects.qrscanner.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.myprojects.qrscanner.R
-import com.myprojects.qrscanner.data.AppDatabase
-import com.myprojects.qrscanner.data.dao.ScanDao
 import com.myprojects.qrscanner.ui.adapter.ScanAdapter
 import com.myprojects.qrscanner.ui.viewmodel.ScanViewModel
+import com.myprojects.qrscanner.utils.ThemeManager
 
 /**
  * Activity for displaying the history of scanned QR codes.
@@ -69,10 +69,45 @@ class HistoryActivity : ComponentActivity() {
         setContentView(R.layout.activity_history)
 
         initializeViews()
+        updateUIColors()
         setupRecyclerView()
         setupViewModel()
         observeData()
         setupBackPressHandling()
+    }
+
+    /**
+     * Called when the activity resumes.
+     * 
+     * This method is called when the activity becomes visible again,
+     * such as when returning from another activity.
+     */
+    override fun onResume() {
+        super.onResume()
+        // Update UI colors in case theme was changed in settings
+        updateUIColors()
+    }
+
+    /**
+     * Updates the UI colors based on the current theme.
+     * 
+     * This method sets the appropriate colors for the UI elements
+     * based on whether the app is in light or dark mode.
+     */
+    private fun updateUIColors() {
+        val isDarkMode = ThemeManager.isDarkMode(this)
+        
+        if (isDarkMode) {
+            // Dark theme colors
+            findViewById<android.view.View>(android.R.id.content).setBackgroundColor(
+                ContextCompat.getColor(this, R.color.background_dark)
+            )
+        } else {
+            // Light theme colors
+            findViewById<android.view.View>(android.R.id.content).setBackgroundColor(
+                ContextCompat.getColor(this, R.color.background_light)
+            )
+        }
     }
 
     /**

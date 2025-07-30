@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material)
+    implementation("androidx.preference:preference-ktx:1.2.1")
 
     // ML Kit ou ZXing (scanner)
     implementation (libs.barcode.scanning) // pour ML Kit

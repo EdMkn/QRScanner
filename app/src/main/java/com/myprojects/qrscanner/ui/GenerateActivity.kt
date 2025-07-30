@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -14,6 +15,8 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.myprojects.qrscanner.R
 import androidx.core.graphics.set
 import androidx.core.graphics.createBitmap
+import androidx.core.content.ContextCompat
+import com.myprojects.qrscanner.utils.ThemeManager
 
 /**
  * Activity for generating QR codes from text input.
@@ -59,8 +62,8 @@ class GenerateActivity : ComponentActivity() {
      * Called when the activity is first created.
      * 
      * This method initializes the activity, sets up the UI components,
-     * configures the click listener for the generate button, and sets up
-     * the back button handling using OnBackPressedDispatcher.
+     * configures the click listener for the generate button,
+     * and sets up the back button handling using OnBackPressedDispatcher.
      * 
      * @param savedInstanceState If the activity is being re-initialized after
      *                          previously being shut down, this Bundle contains
@@ -71,8 +74,70 @@ class GenerateActivity : ComponentActivity() {
         setContentView(R.layout.activity_generate)
 
         initializeViews()
+        updateUIColors()
         setupClickListeners()
         setupBackPressHandling()
+    }
+
+    /**
+     * Called when the activity resumes.
+     * 
+     * This method is called when the activity becomes visible again,
+     * such as when returning from another activity.
+     */
+    override fun onResume() {
+        super.onResume()
+        // Update UI colors in case theme was changed in settings
+        updateUIColors()
+    }
+
+    /**
+     * Updates the UI colors based on the current theme.
+     * 
+     * This method sets the appropriate colors for the UI elements
+     * based on whether the app is in light or dark mode.
+     */
+    private fun updateUIColors() {
+        val isDarkMode = ThemeManager.isDarkMode(this)
+        
+        if (isDarkMode) {
+            // Dark theme colors
+            findViewById<android.view.View>(android.R.id.content).setBackgroundColor(
+                ContextCompat.getColor(this, R.color.background_dark)
+            )
+            
+            // Update text colors
+            findViewById<TextView>(R.id.textViewTitle)?.setTextColor(
+                ContextCompat.getColor(this, R.color.on_background_dark)
+            )
+            
+            // Update input field colors
+            inputEditText.setTextColor(ContextCompat.getColor(this, R.color.on_surface_dark))
+            inputEditText.setHintTextColor(ContextCompat.getColor(this, R.color.on_surface_variant_dark))
+            
+            // Update button colors
+            generateButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.primary_dark))
+            generateButton.setTextColor(ContextCompat.getColor(this, R.color.on_primary_dark))
+            
+        } else {
+            // Light theme colors
+            findViewById<android.view.View>(android.R.id.content).setBackgroundColor(
+                ContextCompat.getColor(this, R.color.background_light)
+            )
+            
+            // Update text colors
+            findViewById<TextView>(R.id.textViewTitle)?.setTextColor(
+                ContextCompat.getColor(this, R.color.on_background_light)
+            )
+            
+            // Update input field colors
+            inputEditText.setTextColor(ContextCompat.getColor(this, R.color.on_surface_light))
+            inputEditText.setHintTextColor(ContextCompat.getColor(this, R.color.on_surface_variant_light))
+            
+            // Update button colors
+            generateButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.primary_light))
+            generateButton.setTextColor(ContextCompat.getColor(this, R.color.on_primary_light))
+        }
     }
 
     /**
@@ -100,7 +165,7 @@ class GenerateActivity : ComponentActivity() {
                 val bitmap = generateQRCode(text)
                 qrImageView.setImageBitmap(bitmap)
             } else {
-                Toast.makeText(this, "Veuillez entrer un texte", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.please_enter_text), Toast.LENGTH_SHORT).show()
             }
         }
     }
