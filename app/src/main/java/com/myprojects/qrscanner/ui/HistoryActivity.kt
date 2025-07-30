@@ -1,7 +1,7 @@
 package com.myprojects.qrscanner.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +11,7 @@ import com.myprojects.qrscanner.data.dao.ScanDao
 import com.myprojects.qrscanner.ui.adapter.ScanAdapter
 import com.myprojects.qrscanner.ui.viewmodel.ScanViewModel
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryActivity : ComponentActivity() {
 
     private lateinit var adapter: ScanAdapter
     private lateinit var recyclerView: RecyclerView
@@ -34,5 +34,10 @@ class HistoryActivity : AppCompatActivity() {
         viewModel.allScans.observe(this) { scans ->
             adapter.updateData(scans)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

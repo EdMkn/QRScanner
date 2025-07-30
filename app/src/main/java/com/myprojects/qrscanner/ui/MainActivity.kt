@@ -1,6 +1,7 @@
 package com.myprojects.qrscanner.ui
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.myprojects.qrscanner.R
@@ -26,6 +28,7 @@ import com.myprojects.qrscanner.ui.viewmodel.ScanViewModel
 class MainActivity : ComponentActivity() {
 
     private lateinit var previewView: PreviewView
+    private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var viewModel: ScanViewModel
     private val scanner = BarcodeScanning.getClient()
 
@@ -34,14 +37,42 @@ class MainActivity : ComponentActivity() {
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this)[ScanViewModel::class.java]
 
-
         previewView = findViewById(R.id.previewView)
+        bottomNavigation = findViewById(R.id.bottomNavigation)
 
-        if (allPermissionsGranted()) {
-            startCamera()
-        } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
+        // Set up bottom navigation
+        bottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_scanner -> {
+                    // Show camera preview
+                    previewView.visibility = android.view.View.VISIBLE
+                    if (allPermissionsGranted()) {
+                        startCamera()
+                    } else {
+                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
+                    }
+                    true
+                }
+                R.id.navigation_generator -> {
+                    // Hide camera and start GenerateActivity
+                    previewView.visibility = android.view.View.GONE
+                    val intent = Intent(this, GenerateActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_history -> {
+                    // Hide camera and start HistoryActivity
+                    previewView.visibility = android.view.View.GONE
+                    val intent = Intent(this, HistoryActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
         }
+
+        // Start with scanner view
+        bottomNavigation.selectedItemId = R.id.navigation_scanner
     }
 
     private fun allPermissionsGranted() = ContextCompat.checkSelfPermission(
@@ -86,10 +117,13 @@ class MainActivity : ComponentActivity() {
                             val rawValue = barcode.rawValue
                             if (rawValue != null) {
                                 val scan = Scan(content = rawValue)
-                                viewModel.insert(scan) // 👉 ICI tu insères dans Room via ViewModel
+                                viewModel.insert(scan)
                                 Log.d("Scanner", "QR détecté : $rawValue")
+                                // Show toast notification
+                                runOnUiThread {
+                                    Toast.makeText(this@MainActivity, "QR Code détecté: $rawValue", Toast.LENGTH_SHORT).show()
+                                }
                             }
-
                         }
                     }
                     .addOnFailureListener {

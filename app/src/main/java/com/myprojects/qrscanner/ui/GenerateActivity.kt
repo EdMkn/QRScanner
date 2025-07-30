@@ -11,8 +11,6 @@ import androidx.activity.ComponentActivity
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.myprojects.qrscanner.R
-import androidx.core.graphics.set
-import androidx.core.graphics.createBitmap
 
 class GenerateActivity : ComponentActivity() {
     private lateinit var inputEditText: EditText
@@ -38,15 +36,20 @@ class GenerateActivity : ComponentActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     private fun generateQRCode(text: String): Bitmap {
         val size = 512
         val qrCodeWriter = QRCodeWriter()
         val bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, size, size)
-        val bitmap = createBitmap(size, size, Bitmap.Config.RGB_565)
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
 
         for (x in 0 until size) {
             for (y in 0 until size) {
-                bitmap[x, y] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
+                bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
             }
         }
         return bitmap
